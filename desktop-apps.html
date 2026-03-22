@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Code Nexus Desktop Application Development — Professional Windows, macOS & Linux desktop software built for performance and reliability.">
+    <title>Desktop Applications — Code Nexus</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+    :root {
+        --blue-gradient: linear-gradient(135deg, #0094FF, #0056E0);
+        --orange-gradient: linear-gradient(135deg, #FF8A00, #FF4D00);
+        --black-bg: #000000;
+        --white: #FFFFFF;
+        --card-bg: rgba(20, 20, 30, 0.85);
+        --card-border: rgba(0, 148, 255, 0.2);
+        --card-border-hover: rgba(0, 148, 255, 0.55);
+        --card-shadow: 0 10px 30px rgba(0, 84, 224, 0.25);
+        --transition: all 0.3s ease;
+        --light-blue: #18A0FB;
+        --dark-orange: #FF4D00;
+        --text-muted: #aaaaaa;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+    body {
+        font-family: 'Rajdhani', sans-serif;
+        background-color: var(--black-bg);
+        color: var(--white);
+        line-height: 1.6;
+        overflow-x: hidden;
+    }
+    h1, h2, h3, h4 { font-family: 'Orbitron', sans-serif; font-weight: 600; letter-spacing: 1px; }
+    img { -webkit-user-drag: none; pointer-events: none; }
+    a img { pointer-events: auto; }
+
+    /* ── Matrix Background ── */
+    .matrix-bg {
+        position: fixed; top: 0; left: 0;
+        width: 100%; height: 100%;
+        z-index: -2; opacity: 0.18; pointer-events: none;
+    }
+    .matrix-overlay {
+        position: fixed; top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: linear-gradient(135deg, rgba(0,84,224,0.04) 0%, rgba(10,10,15,0.08) 100%);
+        z-index: -1; pointer-events: none;
+    }
+
+    /* ── Navbar ── */
+    .navbar {
+        position: fixed; top: 0; left: 0; width: 100%;
+        background: rgba(8,8,14,0.97);
+        backdrop-filter: blur(12px);
+        padding: 14px 0; z-index: 1000;
+        border-bottom: 1px solid rgba(255,255,255,0.07);
+        transition: var(--transition);
+    }
+    .navbar.scrolled { padding: 9px 0; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+    .container { width: 90%; max-width: 1200px; margin: 0 auto; }
+    .nav-container { display: flex; justify-content: space-between; align-items: center; }
+    .logo { display: flex; align-items: center; }
+    .logo img { height: 35px; display: block; pointer-events: auto; }
+    .nav-back {
+        display: flex; align-items: center; gap: 8px;
+        color: rgba(255,255,255,0.75); text-decoration: none;
+        font-family: 'Rajdhani', sans-serif; font-weight: 500; font-size: 0.95rem;
+        transition: var(--transition); padding: 6px 14px;
+        border: 1px solid rgba(255,255,255,0.12); border-radius: 6px;
+    }
+    .nav-back:hover { color: #0094FF; border-color: #0094FF; }
+    .nav-back i { font-size: 0.85rem; }
+
+    /* ── Hero ── */
+    .page-hero {
+        min-height: 70vh; display: flex; align-items: center;
+        padding: 120px 0 60px; position: relative; overflow: hidden;
+    }
+    .hero-badge {
+        display: inline-flex; align-items: center; gap: 8px;
+        background: rgba(0,148,255,0.1); border: 1px solid rgba(0,148,255,0.3);
+        border-radius: 30px; padding: 6px 18px; font-size: 0.85rem;
+        color: var(--light-blue); margin-bottom: 22px;
+        font-family: 'Rajdhani', sans-serif; font-weight: 500;
+        letter-spacing: 1px; text-transform: uppercase;
+    }
+    .page-hero h1 {
+        font-size: clamp(2rem, 5vw, 3.5rem); margin-bottom: 20px;
+        background: var(--blue-gradient); -webkit-background-clip: text;
+        background-clip: text; color: transparent; line-height: 1.15;
+    }
+    .page-hero p {
+        font-size: clamp(1rem, 2vw, 1.2rem); color: var(--text-muted);
+        max-width: 620px; margin-bottom: 36px; line-height: 1.7;
+    }
+    .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+    .hero-stats { display: flex; gap: 40px; margin-top: 50px; flex-wrap: wrap; }
+    .hero-stat { text-align: center; }
+    .hero-stat-num {
+        font-family: 'Orbitron', sans-serif; font-size: 2rem; font-weight: 700;
+        background: var(--blue-gradient); -webkit-background-clip: text;
+        background-clip: text; color: transparent; display: block;
+    }
+    .hero-stat-label { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+
+    /* ── Section divider ── */
+    .section-divider {
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--dark-orange), transparent);
+        margin: 0 auto; width: 90%; max-width: 1000px;
+    }
+
+    /* ── Sections ── */
+    section { padding: 70px 0; }
+    .section-title { text-align: center; margin-bottom: 50px; }
+    .section-title h2 {
+        font-size: clamp(1.6rem, 3.5vw, 2.2rem); margin-bottom: 14px;
+        background: var(--blue-gradient); -webkit-background-clip: text;
+        background-clip: text; color: transparent;
+    }
+    .section-title p { font-size: 1.05rem; color: var(--text-muted); max-width: 580px; margin: 0 auto; }
+
+    /* ── Platform Cards ── */
+    .platforms-grid {
+        display: grid; grid-template-columns: repeat(3, 1fr);
+        gap: 22px; align-items: start;
+    }
+    .platform-card {
+        background: var(--card-bg); border: 1px solid var(--card-border);
+        border-radius: 14px; padding: 34px 26px; text-align: center;
+        transition: var(--transition); position: relative; overflow: hidden;
+        will-change: transform;
+    }
+    .platform-card::before {
+        content: ''; position: absolute; top: 0; left: -100%;
+        width: 100%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(0,148,255,0.08), transparent);
+        transition: all 0.7s;
+    }
+    .platform-card:hover { transform: translateY(-8px); box-shadow: var(--card-shadow); border-color: var(--card-border-hover); }
+    .platform-card:hover::before { left: 100%; }
+    .platform-icon { font-size: 3rem; margin-bottom: 16px; display: block; }
+    .icon-win   { color: #0078D4; }
+    .icon-mac   { color: #A2AAAD; }
+    .icon-linux { color: #FCC624; }
+    .platform-card h3 { font-size: 1.25rem; margin-bottom: 10px; color: #fff; }
+    .platform-card p  { color: #aaa; font-size: 0.95rem; line-height: 1.6; }
+    .platform-tags { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 14px; }
+    .tag {
+        background: rgba(0,148,255,0.1); border: 1px solid rgba(0,148,255,0.2);
+        border-radius: 20px; padding: 3px 12px;
+        font-size: 0.76rem; color: var(--light-blue);
+        font-family: 'Rajdhani', sans-serif; font-weight: 500;
+    }
+
+    /* ── Services Grid ── */
+    .services-grid {
+        display: grid; grid-template-columns: repeat(3, 1fr);
+        gap: 22px; align-items: start;
+    }
+    .service-card {
+        background: var(--card-bg); border: 1px solid var(--card-border);
+        border-radius: 12px; padding: 28px 24px;
+        transition: var(--transition); position: relative; overflow: hidden; will-change: transform;
+    }
+    .service-card::before {
+        content: ''; position: absolute; top: 0; left: -100%;
+        width: 100%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(0,148,255,0.08), transparent);
+        transition: all 0.7s;
+    }
+    .service-card:hover { transform: translateY(-8px); box-shadow: var(--card-shadow); border-color: var(--card-border-hover); }
+    .service-card:hover::before { left: 100%; }
+    .service-icon {
+        width: 56px; height: 56px;
+        background: rgba(0,148,255,0.1); border: 1px solid rgba(0,148,255,0.25);
+        border-radius: 12px; display: flex; align-items: center;
+        justify-content: center; font-size: 1.5rem;
+        margin-bottom: 18px; color: var(--light-blue);
+    }
+    .service-card h3 { font-size: 1.15rem; margin-bottom: 10px; color: #fff; }
+    .service-card p  { color: #aaa; font-size: 0.93rem; line-height: 1.6; }
+
+    /* ── Tech Stack ── */
+    .tech-grid {
+        display: grid; grid-template-columns: repeat(4, 1fr);
+        gap: 16px; align-items: start;
+    }
+    .tech-card {
+        background: var(--card-bg); border: 1px solid var(--card-border);
+        border-radius: 10px; padding: 22px 18px; text-align: center;
+        transition: var(--transition); will-change: transform;
+    }
+    .tech-card:hover { transform: translateY(-6px); border-color: var(--card-border-hover); box-shadow: var(--card-shadow); }
+    .tech-card i  { font-size: 2.2rem; margin-bottom: 10px; display: block; }
+    .tech-card h4 { font-size: 0.95rem; color: #fff; margin-bottom: 4px; }
+    .tech-card p  { font-size: 0.8rem; color: #888; }
+    .icon-python  { color: #3776AB; }
+    .icon-cpp     { color: #00599C; }
+    .icon-cs      { color: #9B4F96; }
+    .icon-electron{ color: #47848F; }
+    .icon-qt      { color: #41CD52; }
+    .icon-sqlite  { color: #003B57; }
+    .icon-git     { color: #F05032; }
+    .icon-vs      { color: #5C2D91; }
+
+    /* ── Process Steps ── */
+    .process-steps {
+        display: grid; grid-template-columns: repeat(4, 1fr);
+        gap: 0; position: relative;
+    }
+    .process-steps::before {
+        content: ''; position: absolute;
+        top: 32px; left: 12%; right: 12%;
+        height: 2px;
+        background: linear-gradient(90deg, #0094FF, #FF4D00);
+        z-index: 0;
+    }
+    .step { text-align: center; padding: 0 12px; position: relative; z-index: 1; }
+    .step-num {
+        width: 64px; height: 64px; border-radius: 50%;
+        background: var(--blue-gradient);
+        display: flex; align-items: center; justify-content: center;
+        font-family: 'Orbitron', sans-serif; font-size: 1.1rem; font-weight: 700;
+        margin: 0 auto 18px; box-shadow: 0 0 20px rgba(0,148,255,0.4);
+    }
+    .step h4 { font-size: 0.95rem; margin-bottom: 8px; color: #fff; }
+    .step p   { font-size: 0.84rem; color: #999; line-height: 1.5; }
+
+    /* ── Packages ── */
+    .packages-grid {
+        display: grid; grid-template-columns: repeat(3, 1fr);
+        gap: 24px; align-items: start;
+    }
+    .package-card {
+        background: var(--card-bg); border: 1px solid var(--card-border);
+        border-radius: 14px; padding: 32px 26px; text-align: center;
+        transition: var(--transition); position: relative; overflow: hidden; will-change: transform;
+    }
+    .package-card.featured { border-color: var(--light-blue); box-shadow: 0 0 30px rgba(0,148,255,0.15); }
+    .package-card:hover { transform: translateY(-8px); box-shadow: var(--card-shadow); }
+    .package-label {
+        position: absolute; top: 16px; right: 16px;
+        background: var(--blue-gradient); color: #fff;
+        font-size: 0.7rem; font-weight: 700;
+        padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px;
+    }
+    .package-icon {
+        font-size: 2.4rem; margin-bottom: 14px;
+        background: var(--blue-gradient); -webkit-background-clip: text;
+        background-clip: text; color: transparent;
+    }
+    .package-card h3  { font-size: 1.3rem; margin-bottom: 6px; color: #fff; }
+    .pkg-subtitle     { color: #888; font-size: 0.9rem; margin-bottom: 20px; }
+    .package-features { list-style: none; text-align: left; margin-bottom: 26px; }
+    .package-features li {
+        padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+        font-size: 0.92rem; color: #ccc;
+        display: flex; align-items: center; gap: 10px;
+    }
+    .package-features li:last-child { border-bottom: none; }
+    .package-features li i { color: #0094FF; font-size: 0.8rem; flex-shrink: 0; }
+
+    /* ── FAQ ── */
+    .faq-list { max-width: 800px; margin: 0 auto; }
+    .faq-item {
+        background: var(--card-bg); border: 1px solid var(--card-border);
+        border-radius: 10px; margin-bottom: 12px; overflow: hidden; transition: border-color 0.3s;
+    }
+    .faq-item.open { border-color: rgba(0,148,255,0.45); }
+    .faq-question {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 18px 22px; cursor: pointer;
+        font-size: 1rem; font-weight: 500; color: #fff;
+        gap: 16px; user-select: none;
+    }
+    .faq-question i { color: var(--light-blue); font-size: 0.9rem; transition: transform 0.3s ease; flex-shrink: 0; }
+    .faq-item.open .faq-question i { transform: rotate(180deg); }
+    .faq-answer {
+        max-height: 0; overflow: hidden;
+        transition: max-height 0.4s cubic-bezier(0.23,1,0.32,1), padding 0.3s ease;
+        color: #aaa; font-size: 0.95rem; line-height: 1.7; padding: 0 22px;
+    }
+    .faq-item.open .faq-answer { max-height: 300px; padding: 0 22px 18px; }
+
+    /* ── CTA ── */
+    .cta-section { padding: 70px 0; text-align: center; }
+    .cta-box {
+        background: linear-gradient(135deg, rgba(0,84,224,0.12), rgba(0,148,255,0.06));
+        border: 1px solid rgba(0,148,255,0.25);
+        border-radius: 18px; padding: 60px 40px;
+        position: relative; overflow: hidden;
+    }
+    .cta-box::before {
+        content: ''; position: absolute; top: -60px; right: -60px;
+        width: 220px; height: 220px;
+        background: radial-gradient(circle, rgba(0,148,255,0.12), transparent 70%);
+        pointer-events: none;
+    }
+    .cta-box h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); margin-bottom: 14px; color: #fff; }
+    .cta-box p  { color: var(--text-muted); font-size: 1.05rem; margin-bottom: 30px; max-width: 540px; margin-left: auto; margin-right: auto; }
+    .cta-btns   { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+    /* ── Buttons ── */
+    .btn {
+        display: inline-block; padding: 12px 28px; border-radius: 6px;
+        text-decoration: none; font-family: 'Orbitron', sans-serif;
+        font-weight: 500; font-size: 0.82rem; text-transform: uppercase;
+        letter-spacing: 1px; transition: var(--transition); border: none; cursor: pointer;
+    }
+    .btn-primary  { background: var(--blue-gradient); color: #fff; box-shadow: 0 4px 15px rgba(0,84,224,0.3); }
+    .btn-primary:hover  { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,84,224,0.45); }
+    .btn-secondary { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,0.6); }
+    .btn-secondary:hover { background: #fff; color: #000; }
+
+    /* ── Scroll reveal ── */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── Footer ── */
+    .page-footer {
+        background: rgba(4,4,9,0.97); padding: 28px 0;
+        border-top: 1px solid rgba(255,255,255,0.07); text-align: center;
+    }
+    .page-footer p { color: #555; font-size: 0.85rem; }
+    .page-footer a { color: #555; text-decoration: none; transition: color 0.2s; }
+    .page-footer a:hover { color: #0094FF; }
+
+    /* ── Floating WhatsApp ── */
+    .whatsapp-float {
+        position: fixed; bottom: 28px; right: 24px;
+        width: 56px; height: 56px; background: #25D366;
+        border-radius: 50%; display: flex; align-items: center;
+        justify-content: center; color: #fff; font-size: 1.4rem;
+        text-decoration: none; box-shadow: 0 5px 18px rgba(37,211,102,0.45);
+        z-index: 500; transition: var(--transition); animation: waPulse 2.5s infinite;
+    }
+    .whatsapp-float:hover { transform: scale(1.1); }
+    @keyframes waPulse {
+        0%,100% { box-shadow: 0 5px 18px rgba(37,211,102,0.45); }
+        50%      { box-shadow: 0 5px 28px rgba(37,211,102,0.75); }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 1024px) {
+        .platforms-grid { grid-template-columns: repeat(2, 1fr); }
+        .services-grid  { grid-template-columns: repeat(2, 1fr); }
+        .tech-grid      { grid-template-columns: repeat(4, 1fr); }
+        .process-steps  { grid-template-columns: repeat(2, 1fr); gap: 30px; }
+        .process-steps::before { display: none; }
+        .packages-grid  { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 767px) {
+        .platforms-grid { grid-template-columns: 1fr; }
+        .services-grid  { grid-template-columns: 1fr; }
+        .tech-grid      { grid-template-columns: repeat(2, 1fr); }
+        .process-steps  { grid-template-columns: 1fr; }
+        .packages-grid  { grid-template-columns: 1fr; }
+        .hero-stats     { gap: 24px; }
+        .page-hero      { padding: 100px 0 50px; }
+        section         { padding: 50px 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.1ms !important; }
+        .reveal { opacity: 1 !important; transform: none !important; }
+    }
+</style>
+</head>
+<body>
+
+<canvas id="matrix" class="matrix-bg" aria-hidden="true"></canvas>
+<div class="matrix-overlay" aria-hidden="true"></div>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+    <div class="container nav-container">
+        <div class="logo">
+            <a href="index.html">
+                <img src="https://i.postimg.cc/3J1QqwvZ/xz.png" alt="Code Nexus" height="35">
+            </a>
+        </div>
+        <a href="index.html" class="nav-back">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+    </div>
+</nav>
+
+<main>
+
+<!-- HERO -->
+<section class="page-hero">
+    <div class="container">
+        <div class="hero-badge">
+            <i class="fas fa-desktop"></i>
+            Desktop Applications
+        </div>
+        <h1>Powerful Software<br>Built for Every Platform</h1>
+        <p>From lightweight utilities to complex enterprise systems — we build fast, reliable, and feature-rich desktop applications for Windows, macOS, and Linux.</p>
+        <div class="hero-btns">
+            <a href="index.html#contact" class="btn btn-primary">Start Your Project</a>
+            <a href="#packages" class="btn btn-secondary">View Packages</a>
+        </div>
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <span class="hero-stat-num">20+</span>
+                <span class="hero-stat-label">Desktop Apps</span>
+            </div>
+            <div class="hero-stat">
+                <span class="hero-stat-num">3 Platforms</span>
+                <span class="hero-stat-label">Win / Mac / Linux</span>
+            </div>
+            <div class="hero-stat">
+                <span class="hero-stat-num">24/7</span>
+                <span class="hero-stat-label">Support</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- PLATFORMS -->
+<section id="platforms">
+    <div class="container">
+        <div class="section-title reveal">
+            <h2>Platforms We Build For</h2>
+            <p>Native and cross-platform desktop solutions for every operating system</p>
+        </div>
+        <div class="platforms-grid">
+
+            <div class="platform-card reveal">
+                <i class="fab fa-windows platform-icon icon-win"></i>
+                <h3>Windows</h3>
+                <p>Feature-rich Windows applications built with modern frameworks — optimized for performance, security, and seamless integration with the Windows ecosystem.</p>
+                <div class="platform-tags">
+                    <span class="tag">C# / .NET</span>
+                    <span class="tag">WPF</span>
+                    <span class="tag">WinForms</span>
+                    <span class="tag">Electron</span>
+                </div>
+            </div>
+
+            <div class="platform-card reveal">
+                <i class="fab fa-apple platform-icon icon-mac"></i>
+                <h3>macOS</h3>
+                <p>Elegant macOS applications that follow Apple's design principles — smooth, intuitive, and fully integrated with macOS features and services.</p>
+                <div class="platform-tags">
+                    <span class="tag">Swift</span>
+                    <span class="tag">SwiftUI</span>
+                    <span class="tag">Electron</span>
+                    <span class="tag">Python</span>
+                </div>
+            </div>
+
+            <div class="platform-card reveal">
+                <i class="fab fa-linux platform-icon icon-linux"></i>
+                <h3>Linux</h3>
+                <p>Stable, efficient Linux applications built for servers and desktops — compatible with major distributions including Ubuntu, Debian, and Fedora.</p>
+                <div class="platform-tags">
+                    <span class="tag">Python</span>
+                    <span class="tag">C++</span>
+                    <span class="tag">Qt</span>
+                    <span class="tag">GTK</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SERVICES -->
+<section id="services">
+    <div class="container">
+        <div class="section-title reveal">
+            <h2>What We Offer</h2>
+            <p>End-to-end desktop software development from design to deployment</p>
+        </div>
+        <div class="services-grid">
+            <div class="service-card reveal">
+                <div class="service-icon"><i class="fas fa-th-large"></i></div>
+                <h3>Custom Desktop Software</h3>
+                <p>Tailor-made applications built around your specific workflow, business logic, and user requirements — no generic solutions.</p>
+            </div>
+            <div class="service-card reveal">
+                <div class="service-icon"><i class="fas fa-layer-group"></i></div>
+                <h3>Cross-Platform Apps</h3>
+                <p>One codebase that runs natively on Windows, macOS, and Linux using Electron or Qt — reducing development cost significantly.</p>
+            </div>
+            <div class="service-card reveal">
+                <div class="service-icon"><i class="fas fa-database"></i></div>
+                <h3>Database Integration</h3>
+                <p>Seamless integration with local and remote databases — SQLite, MySQL, PostgreSQL, and cloud-based solutions.</p>
+            </div>
+            <div class="service-card reveal">
+                <div class="service-icon"><i class="fas fa-cogs"></i></div>
+                <h3>System Integration</h3>
+                <p>Deep integration with OS-level features, hardware peripherals, printers, scanners, and third-party APIs and services.</p>
+            </div>
+            <div class="service-card reveal">
+                <div class="service-icon"><i class="fas fa-chart-bar"></i></div>
+                <h3>Data & Reporting Tools</h3>
+                <p>Dashboards, analytics panels, and automated reporting systems with export capabilities in PDF, Excel, and more.</p>
+            </div>
+            <div class="service-card reveal">
+                <div class="service-icon"><i class="fas fa-tools"></i></div>
+                <h3>Maintenance & Support</h3>
+                <p>Ongoing updates, compatibility patches for new OS versions, performance improvements, and dedicated technical support.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- TECH STACK -->
+<section id="tech">
+    <div class="container">
+        <div class="section-title reveal">
+            <h2>Technologies We Use</h2>
+            <p>Battle-tested tools and frameworks for building robust desktop software</p>
+        </div>
+        <div class="tech-grid">
+            <div class="tech-card reveal">
+                <i class="fab fa-python icon-python"></i>
+                <h4>Python</h4>
+                <p>Rapid development</p>
+            </div>
+            <div class="tech-card reveal">
+                <i class="fas fa-code icon-cpp"></i>
+                <h4>C++</h4>
+                <p>High performance</p>
+            </div>
+            <div class="tech-card reveal">
+                <i class="fas fa-hashtag icon-cs"></i>
+                <h4>C# / .NET</h4>
+                <p>Windows native</p>
+            </div>
+            <div class="tech-card reveal">
+                <i class="fab fa-js-square icon-electron"></i>
+                <h4>Electron</h4>
+                <p>Cross-platform JS</p>
+            </div>
+            <div class="tech-card reveal">
+                <i class="fas fa-cubes icon-qt"></i>
+                <h4>Qt Framework</h4>
+                <p>Native UI toolkit</p>
+            </div>
+            <div class="tech-card reveal">
+                <i class="fas fa-database icon-sqlite"></i>
+                <h4>SQLite / MySQL</h4>
+                <p>Local & remote DB</p>
+            </div>
+            <div class="tech-card reveal">
+                <i class="fab fa-git-alt icon-git"></i>
+                <h4>Git</h4>
+                <p>Version control</p>
+            </div>
+            <div class="tech-card reveal">
+                <i class="fas fa-laptop-code icon-vs"></i>
+                <h4>Visual Studio</h4>
+                <p>IDE & debugging</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- PROCESS -->
+<section id="process">
+    <div class="container">
+        <div class="section-title reveal">
+            <h2>Our Process</h2>
+            <p>A structured workflow from requirements to deployment</p>
+        </div>
+        <div class="process-steps">
+            <div class="step reveal">
+                <div class="step-num">01</div>
+                <h4>Requirements</h4>
+                <p>We gather all functional and technical requirements through detailed analysis sessions.</p>
+            </div>
+            <div class="step reveal">
+                <div class="step-num">02</div>
+                <h4>Design</h4>
+                <p>UI mockups and system architecture are designed and reviewed before development begins.</p>
+            </div>
+            <div class="step reveal">
+                <div class="step-num">03</div>
+                <h4>Development</h4>
+                <p>Iterative development with milestone-based progress updates and demos.</p>
+            </div>
+            <div class="step reveal">
+                <div class="step-num">04</div>
+                <h4>Delivery</h4>
+                <p>Full testing, installer packaging, documentation, and handover with training if needed.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- PACKAGES -->
+<section id="packages">
+    <div class="container">
+        <div class="section-title reveal">
+            <h2>Packages</h2>
+            <p>Flexible pricing based on your project complexity and requirements</p>
+        </div>
+        <div class="packages-grid">
+
+            <div class="package-card reveal">
+                <div class="package-icon"><i class="fas fa-rocket"></i></div>
+                <h3>Starter</h3>
+                <p class="pkg-subtitle">Simple tools and utilities</p>
+                <ul class="package-features">
+                    <li><i class="fas fa-check-circle"></i> Single Platform</li>
+                    <li><i class="fas fa-check-circle"></i> Up to 5 Core Features</li>
+                    <li><i class="fas fa-check-circle"></i> Basic UI Design</li>
+                    <li><i class="fas fa-check-circle"></i> Local Database (SQLite)</li>
+                    <li><i class="fas fa-check-circle"></i> Installer Package</li>
+                    <li><i class="fas fa-check-circle"></i> 1 Month Support</li>
+                </ul>
+                <a href="index.html#contact" class="btn btn-secondary" style="width:100%;text-align:center;">Get Started</a>
+            </div>
+
+            <div class="package-card featured reveal">
+                <div class="package-label">Most Popular</div>
+                <div class="package-icon"><i class="fas fa-gem"></i></div>
+                <h3>Professional</h3>
+                <p class="pkg-subtitle">Full-featured business software</p>
+                <ul class="package-features">
+                    <li><i class="fas fa-check-circle"></i> Windows + macOS</li>
+                    <li><i class="fas fa-check-circle"></i> Unlimited Features</li>
+                    <li><i class="fas fa-check-circle"></i> Custom UI/UX Design</li>
+                    <li><i class="fas fa-check-circle"></i> Remote Database Integration</li>
+                    <li><i class="fas fa-check-circle"></i> User Auth & Roles</li>
+                    <li><i class="fas fa-check-circle"></i> Reports & Export (PDF/Excel)</li>
+                    <li><i class="fas fa-check-circle"></i> Auto-Update System</li>
+                    <li><i class="fas fa-check-circle"></i> 3 Months Support</li>
+                </ul>
+                <a href="index.html#contact" class="btn btn-primary" style="width:100%;text-align:center;">Get Started</a>
+            </div>
+
+            <div class="package-card reveal">
+                <div class="package-icon"><i class="fas fa-crown"></i></div>
+                <h3>Enterprise</h3>
+                <p class="pkg-subtitle">Large-scale systems & integrations</p>
+                <ul class="package-features">
+                    <li><i class="fas fa-check-circle"></i> All 3 Platforms</li>
+                    <li><i class="fas fa-check-circle"></i> Complex System Architecture</li>
+                    <li><i class="fas fa-check-circle"></i> Hardware Integration</li>
+                    <li><i class="fas fa-check-circle"></i> Advanced Security Layer</li>
+                    <li><i class="fas fa-check-circle"></i> Real-Time Data Sync</li>
+                    <li><i class="fas fa-check-circle"></i> Custom Reporting Engine</li>
+                    <li><i class="fas fa-check-circle"></i> Network & API Integration</li>
+                    <li><i class="fas fa-check-circle"></i> 6 Months Support</li>
+                </ul>
+                <a href="index.html#contact" class="btn btn-secondary" style="width:100%;text-align:center;">Get Started</a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- FAQ -->
+<section id="faq">
+    <div class="container">
+        <div class="section-title reveal">
+            <h2>Frequently Asked Questions</h2>
+            <p>Common questions about our desktop application development service</p>
+        </div>
+        <div class="faq-list">
+            <div class="faq-item">
+                <div class="faq-question">
+                    How long does it take to build a desktop application?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Simple utilities take 2–4 weeks. A professional business application typically requires 6–12 weeks. Complex enterprise systems with multiple integrations may take 3–6 months. We provide a clear timeline after the requirements phase.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    Can the app work without an internet connection?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Absolutely. Desktop applications can be designed to work fully offline using local databases like SQLite. If needed, we can also implement sync functionality that works when a connection is available.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    Can you build for all three platforms at once?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Yes. Using cross-platform frameworks like Electron or Qt, we can build a single application that runs on Windows, macOS, and Linux — significantly reducing development time and cost compared to building three separate native apps.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    Will you provide the source code?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Yes. Upon project completion and final payment, you receive full ownership of the source code along with documentation. You can modify, extend, or hand it to another developer at any time.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    Can the application integrate with our existing systems?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Yes. We regularly integrate desktop apps with existing web services, REST APIs, ERP systems, databases, printers, barcode scanners, and other hardware peripherals. System integration is one of our core strengths.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-box reveal">
+            <h2>Have a Software Idea?<br>Let's Build It.</h2>
+            <p>Tell us what you need and we'll design and develop a desktop application that fits your workflow perfectly.</p>
+            <div class="cta-btns">
+                <a href="index.html#contact" class="btn btn-primary">Contact Us Now</a>
+                <a href="https://wa.me/201097422920" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+                    <i class="fab fa-whatsapp" style="margin-right:6px"></i> WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="page-footer">
+    <div class="container">
+        <p>&copy; <span id="currentYear"></span> Code Nexus. All rights reserved. |
+            <a href="index.html">Home</a> &nbsp;|&nbsp;
+            <a href="index.html#contact">Contact</a>
+        </p>
+    </div>
+</footer>
+
+<!-- Floating WhatsApp -->
+<a href="https://wa.me/201097422920" target="_blank" rel="noopener noreferrer"
+   class="whatsapp-float" aria-label="Contact us on WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+</a>
+
+<script>
+(function() {
+    'use strict';
+
+    /* Matrix */
+    var canvas = document.getElementById('matrix');
+    var ctx = canvas.getContext('2d');
+    var chars = '01{}[]();<>/*-+@#$%ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    var fontSize = 14, columns, rainDrops;
+
+    function resize() {
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+        columns = Math.floor(canvas.width / fontSize);
+        rainDrops = [];
+        for (var i = 0; i < columns; i++) rainDrops[i] = 1;
+    }
+    function draw() {
+        ctx.fillStyle = 'rgba(0,0,0,0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#0094FF';
+        ctx.font = fontSize + 'px monospace';
+        for (var i = 0; i < rainDrops.length; i++) {
+            ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * fontSize, rainDrops[i] * fontSize);
+            if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) rainDrops[i] = 0;
+            rainDrops[i]++;
+        }
+        requestAnimationFrame(draw);
+    }
+    resize();
+    draw();
+    var rt;
+    window.addEventListener('resize', function() { clearTimeout(rt); rt = setTimeout(resize, 200); }, { passive: true });
+
+    /* Navbar scroll */
+    var navbar = document.getElementById('navbar');
+    var ticking = false;
+    window.addEventListener('scroll', function() {
+        if (!ticking) {
+            ticking = true;
+            requestAnimationFrame(function() {
+                navbar.classList.toggle('scrolled', window.scrollY > 50);
+                ticking = false;
+            });
+        }
+    }, { passive: true });
+
+    /* Scroll reveal */
+    if ('IntersectionObserver' in window) {
+        var obs = new IntersectionObserver(function(entries) {
+            entries.forEach(function(e) {
+                if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+            });
+        }, { threshold: 0.12 });
+        document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
+    } else {
+        document.querySelectorAll('.reveal').forEach(function(el) { el.classList.add('visible'); });
+    }
+
+    /* FAQ accordion */
+    document.querySelectorAll('.faq-question').forEach(function(q) {
+        q.addEventListener('click', function() {
+            var item = q.parentElement;
+            var isOpen = item.classList.contains('open');
+            document.querySelectorAll('.faq-item').forEach(function(i) { i.classList.remove('open'); });
+            if (!isOpen) item.classList.add('open');
+        });
+    });
+
+    /* Copyright year */
+    var y = document.getElementById('currentYear');
+    if (y) y.textContent = new Date().getFullYear();
+
+})();
+</script>
+</body>
+</html>

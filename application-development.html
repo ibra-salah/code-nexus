@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Code Nexus Application Development — Professional iOS, Android & cross-platform mobile app development built to perform.">
+    <title>Application Development — Code Nexus</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+    :root {
+        --blue-gradient: linear-gradient(135deg, #0094FF, #0056E0);
+        --orange-gradient: linear-gradient(135deg, #FF8A00, #FF4D00);
+        --black-bg: #000000;
+        --white: #FFFFFF;
+        --card-bg: rgba(20, 20, 30, 0.85);
+        --card-border: rgba(0, 148, 255, 0.2);
+        --card-border-hover: rgba(0, 148, 255, 0.55);
+        --card-shadow: 0 10px 30px rgba(0, 84, 224, 0.25);
+        --transition: all 0.3s ease;
+        --light-blue: #18A0FB;
+        --dark-orange: #FF4D00;
+        --text-muted: #aaaaaa;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+    body {
+        font-family: 'Rajdhani', sans-serif;
+        background-color: var(--black-bg);
+        color: var(--white);
+        line-height: 1.6;
+        overflow-x: hidden;
+    }
+    h1, h2, h3, h4 { font-family: 'Orbitron', sans-serif; font-weight: 600; letter-spacing: 1px; }
+    img { -webkit-user-drag: none; pointer-events: none; }
+    a img { pointer-events: auto; }
+
+    /* ── Matrix Background ── */
+    .matrix-bg {
+        position: fixed; top: 0; left: 0;
+        width: 100%; height: 100%;
+        z-index: -2; opacity: 0.18; pointer-events: none;
+    }
+    .matrix-overlay {
+        position: fixed; top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: linear-gradient(135deg, rgba(0,84,224,0.04) 0%, rgba(10,10,15,0.08) 100%);
+        z-index: -1; pointer-events: none;
+    }
+
+    /* ── Navbar ── */
+    .navbar {
+        position: fixed; top: 0; left: 0; width: 100%;
+        background: rgba(8,8,14,0.97);
+        backdrop-filter: blur(12px);
+        padding: 14px 0; z-index: 1000;
+        border-bottom: 1px solid rgba(255,255,255,0.07);
+        transition: var(--transition);
+    }
+    .navbar.scrolled { padding: 9px 0; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+    .container { width: 90%; max-width: 1200px; margin: 0 auto; }
+    .nav-container { display: flex; justify-content: space-between; align-items: center; }
+    .logo { display: flex; align-items: center; }
+    .logo img { height: 35px; display: block; pointer-events: auto; }
+    .nav-back {
+        display: flex; align-items: center; gap: 8px;
+        color: rgba(255,255,255,0.75); text-decoration: none;
+        font-family: 'Rajdhani', sans-serif; font-weight: 500; font-size: 0.95rem;
+        transition: var(--transition); padding: 6px 14px;
+        border: 1px solid rgba(255,255,255,0.12); border-radius: 6px;
+    }
+    .nav-back:hover { color: #0094FF; border-color: #0094FF; }
+    .nav-back i { font-size: 0.85rem; }
+
+    /* ── Hero ── */
+    .page-hero {
+        min-height: 70vh; display: flex; align-items: center;
+        padding: 120px 0 60px; position: relative; overflow: hidden;
+    }
+    .hero-badge {
+        display: inline-flex; align-items: center; gap: 8px;
+        background: rgba(0,148,255,0.1); border: 1px solid rgba(0,148,255,0.3);
+        border-radius: 30px; padding: 6px 18px; font-size: 0.85rem;
+        color: var(--light-blue); margin-bottom: 22px;
+        font-family: 'Rajdhani', sans-serif; font-weight: 500;
+        letter-spacing: 1px; text-transform: uppercase;
+    }
+    .page-hero h1 {
+        font-size: clamp(2rem, 5vw, 3.5rem); margin-bottom: 20px;
+        background: var(--blue-gradient); -webkit-background-clip: text;
+        background-clip: text; color: transparent; line-height: 1.15;
+    }
+    .page-hero p {
+        font-size: clamp(1rem, 2vw, 1.2rem); color: var(--text-muted);
+        max-width: 620px; margin-bottom: 36px; line-height: 1.7;
+    }
+    .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+    .hero-stats { display: flex; gap: 40px; margin-top: 50px; flex-wrap: wrap; }
+    .hero-stat { text-align: center; }
+    .hero-stat-num {
+        font-family: 'Orbitron', sans-serif; font-size: 2rem; font-weight: 700;
+        background: var(--blue-gradient); -webkit-background-clip: text;
+        background-clip: text; color: transparent; display: block;
+    }
+    .hero-stat-label { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+
+    /* ── Platform Cards (iOS / Android / Cross) ── */
+    .platforms-grid {
+        display: grid; grid-template-columns: repeat(3, 1fr);
+        gap: 22px; align-items: start;
+    }
+    .platform-card {
+        background: var(--card-bg); border: 1px solid var(--card-border);
+        border-radius: 14px; padding: 34px 26px; text-align: center;
+        transition: var(--transition); position: relative; overflow: hidden;
+        will-change: transform;
+    }
+    .platform-card::before {
+        content: ''; position: absolute; top: 0; left: -100%;
+        width: 100%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(0,148,255,0.08), transparent);
+        transition: all 0.7s;
+    }
+    .platform-card:hover { transform: translateY(-8px); box-shadow: var(--card-shadow); border-color: var(--card-border-hover); }
+    .platform-card:hover::before { left: 100%; }
+    .platform-icon { font-size: 3rem; margin-bottom: 16px; display: block; }
+    .icon-ios     { color: #A2AAAD; }
+    .icon-android { color: #3DDC84; }
+    .icon-cross   { color: #54C5F8; }
+    .platform-card h3 { font-size: 1.25rem; margin-bottom: 10px; color: #fff; }
+    .platform-card p  { color: #aaa; font-size: 0.95rem; line-height: 1.6; }
+    .platform-tags { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 14px; }
+    .tag {
+        background: rgba(0,148,255,0.1); border: 1px solid rgba(0,148,255,0.2);
+        border-radius: 20px; padding: 3px 12px;
+        font-size: 0.76rem; color: var(--light-blue);
+        font-family: 'Rajdhani', sans-serif; font-weight: 500;
+    }
+
+    /* ── Section divider ── */
+    .section-divider {
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--dark-orange), transparent);
+        margin: 0 auto; width: 90%; max-width: 1000px;
+    }
+
+    /* ── Sections ── */
+    section { padding: 70px 0; }
+    .section-title { text-align: center; margin-bottom: 50px; }
+    .section-title h2 {
+        font-size: clamp(1.6rem, 3.5vw, 2.2rem); margin-bottom: 14px;
+        background: var(--blue-gradient); -webkit-background-clip: text;
+        background-clip: text; color: transparent;
+    }
+    .section-title p { font-size: 1.05rem; color: var(--text-muted); max-width: 580px; margin: 0 auto; }
+
+    /* ── Services Grid ── */
+    .services-grid {
+        display: grid; grid-template-columns: repeat(3, 1fr);
+        gap: 22px; align-items: start;
+    }
+    .service-card {
+        background: var(--card-bg); border: 1px solid var(--card-border);
+        border-radius: 12px; padding: 28px 24px;
+        transition: var(--transition); position: relative; overflow: hidden; will-change: transform;
+    }
+    .service-card::before {
+        content: ''; position: absolute; top: 0; left: -100%;
+        width: 100%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(0,148,255,0.08), transparent);
+        transition: all 0.7s;
+    }
+    .service-card:hover { transform: translateY(-8px); box-shadow: var(--card-shadow); border-color: var(--card-border-hover); }
+    .service-card:hover::before { left: 100%; }
+    .service-icon {
+        width: 56px; height: 56px;
+        background: rgba(0,148,255,0.1); border: 1px solid rgba(0,148,255,0.25);
+        border-radius: 12px; display: flex; align-items: center;
+        justify-content: center; font-size: 1.5rem;
+        margin-bottom: 18px; color: var(--light-blue);
+    }
+    .service-card h3 { font-size: 1.15rem; margin-bottom: 10px; color: #fff; }
+    .service-card p  { color: #aaa; font-size: 0.93rem; line-height: 1.6; }
+
+    /* ── Tech Stack ── */
+    .tech-grid {
+        display: grid; grid-template-columns: repeat(4, 1fr);
+        gap: 16px; align-items: start;
+    }
+    .tech-card {
+        background: var(--card-bg); border: 1px solid var(--card-border);
+        border-radius: 10px; padding: 22px 18px; text-align: center;
+        transition: var(--transition); will-change: transform;
+    }
+    .tech-card:hover { transform: translateY(-6px); border-color: var(--card-border-hover); box-shadow: var(--card-shadow); }
+    .tech-card i { font-size: 2.2rem; margin-bottom: 10px; display: block; }
+    .tech-card h4 { font-size: 0.95rem; color: #fff; margin-bottom: 4px; }
+    .tech-card p  { font-size: 0.8rem; color: #888; }
+    .icon-flutter  { color: #54C5F8; }
+    .icon-react-n  { color: #61DBFB; }
+    .icon-swift    { color: #FA7343; }
+    .icon-kotlin   { color: #A97BFF; }
+    .icon-firebase { color: #FFCA28; }
+    .icon-figma    { color: #F24E1E; }
+    .icon-node2    { color: #68A063; }
+    .icon-git      { color: #F05032; }
+
+    /* ── Process Steps ── */
+    .process-steps {
+        display: grid; grid-template-columns: repeat(5, 1fr);
+        gap: 0; position: relative;
+    }
+    .process-steps::before {
+        content: ''; position: absolute;
+        top: 32px; left: 10%; right: 10%;
+        height: 2px;
+        background: linear-gradient(90deg, #0094FF, #FF4D00);
+        z-index: 0;
+    }
+    .step { text-align: center; padding: 0 12px; position: relative; z-index: 1; }
+    .step-num {
+        width: 64px; height: 64px; border-radius: 50%;
+        background: var(--blue-gradient);
+        display: flex; align-items: center; justify-content: center;
+        font-family: 'Orbitron', sans-serif; font-size: 1.1rem; font-weight: 700;
+        margin: 0 auto 18px; box-shadow: 0 0 20px rgba(0,148,255,0.4);
+    }
+    .step h4 { font-size: 0.95rem; margin-bottom: 8px; color: #fff; }
+    .step p   { font-size: 0.84rem; color: #999; line-height: 1.5; }
+
+    /* ── Packages ── */
+    .packages-grid {
+        display: grid; grid-template-columns: repeat(3, 1fr);
+        gap: 24px; align-items: start;
+    }
+    .package-card {
+        background: var(--card-bg); border: 1px solid var(--card-border);
+        border-radius: 14px; padding: 32px 26px; text-align: center;
+        transition: var(--transition); position: relative; overflow: hidden; will-change: transform;
+    }
+    .package-card.featured { border-color: var(--light-blue); box-shadow: 0 0 30px rgba(0,148,255,0.15); }
+    .package-card:hover { transform: translateY(-8px); box-shadow: var(--card-shadow); }
+    .package-label {
+        position: absolute; top: 16px; right: 16px;
+        background: var(--blue-gradient); color: #fff;
+        font-size: 0.7rem; font-weight: 700;
+        padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px;
+    }
+    .package-icon {
+        font-size: 2.4rem; margin-bottom: 14px;
+        background: var(--blue-gradient); -webkit-background-clip: text;
+        background-clip: text; color: transparent;
+    }
+    .package-card h3     { font-size: 1.3rem; margin-bottom: 6px; color: #fff; }
+    .pkg-subtitle        { color: #888; font-size: 0.9rem; margin-bottom: 20px; }
+    .package-features    { list-style: none; text-align: left; margin-bottom: 26px; }
+    .package-features li {
+        padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+        font-size: 0.92rem; color: #ccc;
+        display: flex; align-items: center; gap: 10px;
+    }
+    .package-features li:last-child { border-bottom: none; }
+    .package-features li i { color: #0094FF; font-size: 0.8rem; flex-shrink: 0; }
+
+    /* ── FAQ ── */
+    .faq-list { max-width: 800px; margin: 0 auto; }
+    .faq-item {
+        background: var(--card-bg); border: 1px solid var(--card-border);
+        border-radius: 10px; margin-bottom: 12px; overflow: hidden; transition: border-color 0.3s;
+    }
+    .faq-item.open { border-color: rgba(0,148,255,0.45); }
+    .faq-question {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 18px 22px; cursor: pointer;
+        font-size: 1rem; font-weight: 500; color: #fff;
+        gap: 16px; user-select: none;
+    }
+    .faq-question i { color: var(--light-blue); font-size: 0.9rem; transition: transform 0.3s ease; flex-shrink: 0; }
+    .faq-item.open .faq-question i { transform: rotate(180deg); }
+    .faq-answer {
+        max-height: 0; overflow: hidden;
+        transition: max-height 0.4s cubic-bezier(0.23,1,0.32,1), padding 0.3s ease;
+        color: #aaa; font-size: 0.95rem; line-height: 1.7; padding: 0 22px;
+    }
+    .faq-item.open .faq-answer { max-height: 300px; padding: 0 22px 18px; }
+
+    /* ── CTA ── */
+    .cta-section { padding: 70px 0; text-align: center; }
+    .cta-box {
+        background: linear-gradient(135deg, rgba(0,84,224,0.12), rgba(0,148,255,0.06));
+        border: 1px solid rgba(0,148,255,0.25);
+        border-radius: 18px; padding: 60px 40px;
+        position: relative; overflow: hidden;
+    }
+    .cta-box::before {
+        content: ''; position: absolute; top: -60px; right: -60px;
+        width: 220px; height: 220px;
+        background: radial-gradient(circle, rgba(0,148,255,0.12), transparent 70%);
+        pointer-events: none;
+    }
+    .cta-box h2   { font-size: clamp(1.6rem, 3vw, 2.2rem); margin-bottom: 14px; color: #fff; }
+    .cta-box p    { color: var(--text-muted); font-size: 1.05rem; margin-bottom: 30px; max-width: 540px; margin-left: auto; margin-right: auto; }
+    .cta-btns     { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+    /* ── Buttons ── */
+    .btn {
+        display: inline-block; padding: 12px 28px; border-radius: 6px;
+        text-decoration: none; font-family: 'Orbitron', sans-serif;
+        font-weight: 500; font-size: 0.82rem; text-transform: uppercase;
+        letter-spacing: 1px; transition: var(--transition); border: none; cursor: pointer;
+    }
+    .btn-primary  { background: var(--blue-gradient); color: #fff; box-shadow: 0 4px 15px rgba(0,84,224,0.3); }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,84,224,0.45); }
+    .btn-secondary { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,0.6); }
+    .btn-secondary:hover { background: #fff; color: #000; }
+
+    /* ── Scroll reveal ── */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── Footer ── */
+    .page-footer {
+        background: rgba(4,4,9,0.97); padding: 28px 0;
+        border-top: 1px solid rgba(255,255,255,0.07); text-align: center;
+    }
+    .page-footer p  { color: #555; font-size: 0.85rem; }
+    .page-footer a  { color: #555; text-decoration: none; transition: color 0.2s; }
+    .page-footer a:hover { color: #0094FF; }
+
+    /* ── Floating WhatsApp ── */
+    .whatsapp-float {
+        position: fixed; bottom: 28px; right: 24px;
+        width: 56px; height: 56px; background: #25D366;
+        border-radius: 50%; display: flex; align-items: center;
+        justify-content: center; color: #fff; font-size: 1.4rem;
+        text-decoration: none; box-shadow: 0 5px 18px rgba(37,211,102,0.45);
+        z-index: 500; transition: var(--transition); animation: waPulse 2.5s infinite;
+    }
+    .whatsapp-float:hover { transform: scale(1.1); }
+    @keyframes waPulse {
+        0%,100% { box-shadow: 0 5px 18px rgba(37,211,102,0.45); }
+        50%      { box-shadow: 0 5px 28px rgba(37,211,102,0.75); }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 1024px) {
+        .platforms-grid { grid-template-columns: repeat(2, 1fr); }
+        .services-grid  { grid-template-columns: repeat(2, 1fr); }
+        .tech-grid      { grid-template-columns: repeat(4, 1fr); }
+        .process-steps  { grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        .process-steps::before { display: none; }
+        .packages-grid  { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 767px) {
+        .platforms-grid { grid-template-columns: 1fr; }
+        .services-grid  { grid-template-columns: 1fr; }
+        .tech-grid      { grid-template-columns: repeat(2, 1fr); }
+        .process-steps  { grid-template-columns: repeat(2, 1fr); }
+        .packages-grid  { grid-template-columns: 1fr; }
+        .hero-stats     { gap: 24px; }
+        .page-hero      { padding: 100px 0 50px; }
+        section         { padding: 50px 0; }
+    }
+    @media (max-width: 480px) {
+        .process-steps { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.1ms !important; }
+        .reveal { opacity: 1 !important; transform: none !important; }
+    }
+</style>
+</head>
+<body>
+
+<canvas id="matrix" class="matrix-bg" aria-hidden="true"></canvas>
+<div class="matrix-overlay" aria-hidden="true"></div>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+    <div class="container nav-container">
+        <div class="logo">
+            <a href="index.html">
+                <img src="https://i.postimg.cc/3J1QqwvZ/xz.png" alt="Code Nexus" height="35">
+            </a>
+        </div>
+        <a href="index.html" class="nav-back">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+    </div>
+</nav>
+
+<main>
+
+<!-- HERO -->
+<section class="page-hero">
+    <div class="container">
+        <div class="hero-badge">
+            <i class="fas fa-mobile-alt"></i>
+            Application Development
+        </div>
+        <h1>Mobile Apps That<br>Users Love to Use</h1>
+        <p>From concept to App Store — we build high-performance iOS, Android, and cross-platform mobile applications that deliver real results for your business.</p>
+        <div class="hero-btns">
+            <a href="index.html#contact" class="btn btn-primary">Start Your App</a>
+            <a href="#packages" class="btn btn-secondary">View Packages</a>
+        </div>
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <span class="hero-stat-num">30+</span>
+                <span class="hero-stat-label">Apps Delivered</span>
+            </div>
+            <div class="hero-stat">
+                <span class="hero-stat-num">iOS & Android</span>
+                <span class="hero-stat-label">Platforms</span>
+            </div>
+            <div class="hero-stat">
+                <span class="hero-stat-num">24/7</span>
+                <span class="hero-stat-label">Support</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- PLATFORMS -->
+<section id="platforms">
+    <div class="container">
+        <div class="section-title reveal">
+            <h2>Platforms We Build For</h2>
+            <p>Native and cross-platform solutions for every device</p>
+        </div>
+        <div class="platforms-grid">
+
+            <div class="platform-card reveal">
+                <i class="fab fa-apple platform-icon icon-ios"></i>
+                <h3>iOS Development</h3>
+                <p>Native iPhone and iPad apps built with Swift and SwiftUI — fast, smooth, and following Apple's Human Interface Guidelines to the letter.</p>
+                <div class="platform-tags">
+                    <span class="tag">Swift</span>
+                    <span class="tag">SwiftUI</span>
+                    <span class="tag">Xcode</span>
+                    <span class="tag">App Store</span>
+                </div>
+            </div>
+
+            <div class="platform-card reveal">
+                <i class="fab fa-android platform-icon icon-android"></i>
+                <h3>Android Development</h3>
+                <p>Native Android apps built with Kotlin — high performance, Material Design compliance, and smooth integration with Google ecosystem services.</p>
+                <div class="platform-tags">
+                    <span class="tag">Kotlin</span>
+                    <span class="tag">Jetpack</span>
+                    <span class="tag">Android Studio</span>
+                    <span class="tag">Play Store</span>
+                </div>
+            </div>
+
+            <div class="platform-card reveal">
+                <i class="fas fa-layer-group platform-icon icon-cross"></i>
+                <h3>Cross-Platform</h3>
+                <p>One codebase, two platforms. Flutter and React Native let us build beautiful, performant apps for both iOS and Android simultaneously.</p>
+                <div class="platform-tags">
+                    <span class="tag">Flutter</span>
+                    <span class="tag">React Native</span>
+                    <span class="tag">Dart</span>
+                    <span class="tag">Both Stores</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SERVICES -->
+<section id="services">
+    <div class="container">
+        <div class="section-title reveal">
+            <h2>What We Offer</h2>
+            <p>Complete mobile development services from design to deployment and beyond</p>
+        </div>
+        <div class="services-grid">
+            <div class="service-card reveal">
+                <div class="service-icon"><i class="fas fa-paint-brush"></i></div>
+                <h3>UI/UX Design</h3>
+                <p>User-centered design with intuitive flows, wireframes, and high-fidelity prototypes before a single line of code is written.</p>
+            </div>
+            <div class="service-card reveal">
+                <div class="service-icon"><i class="fas fa-mobile-alt"></i></div>
+                <h3>Native App Development</h3>
+                <p>Platform-specific apps built with Swift (iOS) or Kotlin (Android) for the best possible performance and user experience.</p>
+            </div>
+            <div class="service-card reveal">
+                <div class="service-icon"><i class="fas fa-sync-alt"></i></div>
+                <h3>Cross-Platform Development</h3>
+                <p>Flutter and React Native solutions that share up to 90% of code across platforms, reducing cost without sacrificing quality.</p>
+            </div>
+            <div class="service-card reveal">
+                <div class="service-icon"><i class="fas fa-plug"></i></div>
+                <h3>API & Backend Integration</h3>
+                <p>Seamless connection to REST APIs, Firebase, and third-party services including payment gateways, maps, and social login.</p>
+            </div>
+            <div class="service-card reveal">
+                <div class="service-icon"><i class="fas fa-upload"></i></div>
+                <h3>App Store Submission</h3>
+                <p>We handle the full submission process for both the Apple App Store and Google Play Store — including ASO optimization.</p>
+            </div>
+            <div class="service-card reveal">
+                <div class="service-icon"><i class="fas fa-tools"></i></div>
+                <h3>Maintenance & Updates</h3>
+                <p>Post-launch support, OS compatibility updates, bug fixes, and new feature rollouts to keep your app current and competitive.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- TECH STACK -->
+<section id="tech">
+    <div class="container">
+        <div class="section-title reveal">
+            <h2>Technologies We Use</h2>
+            <p>Industry-leading tools for building modern, scalable mobile applications</p>
+        </div>
+        <div class="tech-grid">
+            <div class="tech-card reveal">
+                <i class="fas fa-mobile icon-flutter"></i>
+                <h4>Flutter</h4>
+                <p>Cross-platform UI</p>
+            </div>
+            <div class="tech-card reveal">
+                <i class="fab fa-react icon-react-n"></i>
+                <h4>React Native</h4>
+                <p>JS mobile apps</p>
+            </div>
+            <div class="tech-card reveal">
+                <i class="fab fa-apple icon-swift"></i>
+                <h4>Swift</h4>
+                <p>iOS native</p>
+            </div>
+            <div class="tech-card reveal">
+                <i class="fab fa-android icon-kotlin"></i>
+                <h4>Kotlin</h4>
+                <p>Android native</p>
+            </div>
+            <div class="tech-card reveal">
+                <i class="fas fa-fire icon-firebase"></i>
+                <h4>Firebase</h4>
+                <p>Backend & auth</p>
+            </div>
+            <div class="tech-card reveal">
+                <i class="fab fa-figma icon-figma"></i>
+                <h4>Figma</h4>
+                <p>UI/UX design</p>
+            </div>
+            <div class="tech-card reveal">
+                <i class="fab fa-node-js icon-node2"></i>
+                <h4>Node.js</h4>
+                <p>API development</p>
+            </div>
+            <div class="tech-card reveal">
+                <i class="fab fa-git-alt icon-git"></i>
+                <h4>Git</h4>
+                <p>Version control</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- PROCESS -->
+<section id="process">
+    <div class="container">
+        <div class="section-title reveal">
+            <h2>Our Process</h2>
+            <p>A proven 5-step workflow from idea to live app</p>
+        </div>
+        <div class="process-steps">
+            <div class="step reveal">
+                <div class="step-num">01</div>
+                <h4>Discovery</h4>
+                <p>We define your app's goals, target users, and core features through a structured brief.</p>
+            </div>
+            <div class="step reveal">
+                <div class="step-num">02</div>
+                <h4>Design</h4>
+                <p>Wireframes and interactive prototypes are created and refined until you're satisfied.</p>
+            </div>
+            <div class="step reveal">
+                <div class="step-num">03</div>
+                <h4>Development</h4>
+                <p>Agile sprints deliver a fully functional app with regular progress updates.</p>
+            </div>
+            <div class="step reveal">
+                <div class="step-num">04</div>
+                <h4>Testing</h4>
+                <p>Thorough QA across devices and OS versions — performance, security, and UX tested.</p>
+            </div>
+            <div class="step reveal">
+                <div class="step-num">05</div>
+                <h4>Launch</h4>
+                <p>Store submission, go-live support, and monitoring to ensure a smooth launch.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- PACKAGES -->
+<section id="packages">
+    <div class="container">
+        <div class="section-title reveal">
+            <h2>Packages</h2>
+            <p>Transparent pricing for every stage of your mobile app journey</p>
+        </div>
+        <div class="packages-grid">
+
+            <div class="package-card reveal">
+                <div class="package-icon"><i class="fas fa-rocket"></i></div>
+                <h3>MVP</h3>
+                <p class="pkg-subtitle">Launch fast, validate your idea</p>
+                <ul class="package-features">
+                    <li><i class="fas fa-check-circle"></i> Single Platform (iOS or Android)</li>
+                    <li><i class="fas fa-check-circle"></i> Up to 5 Core Screens</li>
+                    <li><i class="fas fa-check-circle"></i> Basic UI/UX Design</li>
+                    <li><i class="fas fa-check-circle"></i> User Authentication</li>
+                    <li><i class="fas fa-check-circle"></i> Store Submission</li>
+                    <li><i class="fas fa-check-circle"></i> 1 Month Support</li>
+                </ul>
+                <a href="index.html#contact" class="btn btn-secondary" style="width:100%;text-align:center;">Get Started</a>
+            </div>
+
+            <div class="package-card featured reveal">
+                <div class="package-label">Most Popular</div>
+                <div class="package-icon"><i class="fas fa-gem"></i></div>
+                <h3>Professional</h3>
+                <p class="pkg-subtitle">Full-featured app for growing businesses</p>
+                <ul class="package-features">
+                    <li><i class="fas fa-check-circle"></i> iOS + Android (Cross-Platform)</li>
+                    <li><i class="fas fa-check-circle"></i> Up to 15 Screens</li>
+                    <li><i class="fas fa-check-circle"></i> Custom UI/UX Design</li>
+                    <li><i class="fas fa-check-circle"></i> API & Backend Integration</li>
+                    <li><i class="fas fa-check-circle"></i> Push Notifications</li>
+                    <li><i class="fas fa-check-circle"></i> Payment Gateway</li>
+                    <li><i class="fas fa-check-circle"></i> Both Store Submissions</li>
+                    <li><i class="fas fa-check-circle"></i> 3 Months Support</li>
+                </ul>
+                <a href="index.html#contact" class="btn btn-primary" style="width:100%;text-align:center;">Get Started</a>
+            </div>
+
+            <div class="package-card reveal">
+                <div class="package-icon"><i class="fas fa-crown"></i></div>
+                <h3>Enterprise</h3>
+                <p class="pkg-subtitle">Complex, scalable apps for large operations</p>
+                <ul class="package-features">
+                    <li><i class="fas fa-check-circle"></i> iOS + Android Native</li>
+                    <li><i class="fas fa-check-circle"></i> Unlimited Screens</li>
+                    <li><i class="fas fa-check-circle"></i> Advanced UI/UX & Animations</li>
+                    <li><i class="fas fa-check-circle"></i> Custom Backend & Database</li>
+                    <li><i class="fas fa-check-circle"></i> Real-Time Features</li>
+                    <li><i class="fas fa-check-circle"></i> Analytics & Reporting</li>
+                    <li><i class="fas fa-check-circle"></i> Security & Encryption</li>
+                    <li><i class="fas fa-check-circle"></i> 6 Months Support</li>
+                </ul>
+                <a href="index.html#contact" class="btn btn-secondary" style="width:100%;text-align:center;">Get Started</a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- FAQ -->
+<section id="faq">
+    <div class="container">
+        <div class="section-title reveal">
+            <h2>Frequently Asked Questions</h2>
+            <p>Everything you need to know about our mobile app development service</p>
+        </div>
+        <div class="faq-list">
+            <div class="faq-item">
+                <div class="faq-question">
+                    How long does it take to build a mobile app?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    A simple MVP can be ready in 4–6 weeks. A full-featured professional app typically takes 8–14 weeks, and complex enterprise apps may take 3–6 months. We provide a detailed timeline during the discovery phase.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    Should I build a native or cross-platform app?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Cross-platform (Flutter or React Native) is ideal for most businesses — it saves cost and time while delivering near-native performance. Native development is recommended for apps requiring advanced hardware access or peak performance, like games or camera-heavy apps.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    Do you handle App Store and Play Store submission?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Yes. We manage the entire submission process for both stores, including preparing screenshots, descriptions, ASO metadata, and handling any review feedback from Apple or Google.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    Will my app work offline?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Yes, if required. We can implement local data caching and offline mode so your users can continue using core features without an internet connection, syncing data when connectivity is restored.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    What happens after the app is launched?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    We provide post-launch support covering bug fixes, OS update compatibility, performance monitoring, and feature enhancements. All packages include a support period, and we offer extended maintenance contracts as well.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-box reveal">
+            <h2>Have an App Idea?<br>Let's Build It.</h2>
+            <p>Tell us your vision and we'll turn it into a polished, market-ready mobile application.</p>
+            <div class="cta-btns">
+                <a href="index.html#contact" class="btn btn-primary">Contact Us Now</a>
+                <a href="https://wa.me/201097422920" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+                    <i class="fab fa-whatsapp" style="margin-right:6px"></i> WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="page-footer">
+    <div class="container">
+        <p>&copy; <span id="currentYear"></span> Code Nexus. All rights reserved. |
+            <a href="index.html">Home</a> &nbsp;|&nbsp;
+            <a href="index.html#contact">Contact</a>
+        </p>
+    </div>
+</footer>
+
+<!-- Floating WhatsApp -->
+<a href="https://wa.me/201097422920" target="_blank" rel="noopener noreferrer"
+   class="whatsapp-float" aria-label="Contact us on WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+</a>
+
+<script>
+(function() {
+    'use strict';
+
+    /* Matrix */
+    var canvas = document.getElementById('matrix');
+    var ctx = canvas.getContext('2d');
+    var chars = '01{}[]();<>/*-+@#$%ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    var fontSize = 14, columns, rainDrops;
+
+    function resize() {
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+        columns = Math.floor(canvas.width / fontSize);
+        rainDrops = [];
+        for (var i = 0; i < columns; i++) rainDrops[i] = 1;
+    }
+    function draw() {
+        ctx.fillStyle = 'rgba(0,0,0,0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#0094FF';
+        ctx.font = fontSize + 'px monospace';
+        for (var i = 0; i < rainDrops.length; i++) {
+            ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * fontSize, rainDrops[i] * fontSize);
+            if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) rainDrops[i] = 0;
+            rainDrops[i]++;
+        }
+        requestAnimationFrame(draw);
+    }
+    resize();
+    draw();
+    var rt;
+    window.addEventListener('resize', function() { clearTimeout(rt); rt = setTimeout(resize, 200); }, { passive: true });
+
+    /* Navbar scroll */
+    var navbar = document.getElementById('navbar');
+    var ticking = false;
+    window.addEventListener('scroll', function() {
+        if (!ticking) {
+            ticking = true;
+            requestAnimationFrame(function() {
+                navbar.classList.toggle('scrolled', window.scrollY > 50);
+                ticking = false;
+            });
+        }
+    }, { passive: true });
+
+    /* Scroll reveal */
+    if ('IntersectionObserver' in window) {
+        var obs = new IntersectionObserver(function(entries) {
+            entries.forEach(function(e) {
+                if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+            });
+        }, { threshold: 0.12 });
+        document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
+    } else {
+        document.querySelectorAll('.reveal').forEach(function(el) { el.classList.add('visible'); });
+    }
+
+    /* FAQ accordion */
+    document.querySelectorAll('.faq-question').forEach(function(q) {
+        q.addEventListener('click', function() {
+            var item = q.parentElement;
+            var isOpen = item.classList.contains('open');
+            document.querySelectorAll('.faq-item').forEach(function(i) { i.classList.remove('open'); });
+            if (!isOpen) item.classList.add('open');
+        });
+    });
+
+    /* Copyright year */
+    var y = document.getElementById('currentYear');
+    if (y) y.textContent = new Date().getFullYear();
+
+})();
+</script>
+</body>
+</html>

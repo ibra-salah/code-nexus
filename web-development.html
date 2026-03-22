@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Code Nexus Web Development Services — Professional front-end, back-end, and full-stack solutions built to scale.">
+    <title>Web Development — Code Nexus</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+    :root {
+        --blue-gradient: linear-gradient(135deg, #0094FF, #0056E0);
+        --orange-gradient: linear-gradient(135deg, #FF8A00, #FF4D00);
+        --black-bg: #000000;
+        --white: #FFFFFF;
+        --card-bg: rgba(20, 20, 30, 0.85);
+        --card-border: rgba(0, 148, 255, 0.2);
+        --card-border-hover: rgba(0, 148, 255, 0.55);
+        --card-shadow: 0 10px 30px rgba(0, 84, 224, 0.25);
+        --transition: all 0.3s ease;
+        --light-blue: #18A0FB;
+        --dark-orange: #FF4D00;
+        --text-muted: #aaaaaa;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+    body {
+        font-family: 'Rajdhani', sans-serif;
+        background-color: var(--black-bg);
+        color: var(--white);
+        line-height: 1.6;
+        overflow-x: hidden;
+    }
+    h1, h2, h3, h4 {
+        font-family: 'Orbitron', sans-serif;
+        font-weight: 600;
+        letter-spacing: 1px;
+    }
+    img { -webkit-user-drag: none; pointer-events: none; }
+    a img { pointer-events: auto; }
+
+    /* ── Matrix Background ── */
+    .matrix-bg {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        z-index: -2;
+        opacity: 0.18;
+        pointer-events: none;
+    }
+    .matrix-overlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: linear-gradient(135deg, rgba(0,84,224,0.04) 0%, rgba(10,10,15,0.08) 100%);
+        z-index: -1;
+        pointer-events: none;
+    }
+
+    /* ── Navbar ── */
+    .navbar {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%;
+        background: rgba(8, 8, 14, 0.97);
+        backdrop-filter: blur(12px);
+        padding: 14px 0;
+        z-index: 1000;
+        border-bottom: 1px solid rgba(255,255,255,0.07);
+        transition: var(--transition);
+    }
+    .navbar.scrolled { padding: 9px 0; box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+    .container { width: 90%; max-width: 1200px; margin: 0 auto; }
+    .nav-container { display: flex; justify-content: space-between; align-items: center; }
+
+    .logo { display: flex; align-items: center; }
+    .logo img { height: 35px; display: block; pointer-events: auto; }
+
+    .nav-back {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: rgba(255,255,255,0.75);
+        text-decoration: none;
+        font-family: 'Rajdhani', sans-serif;
+        font-weight: 500;
+        font-size: 0.95rem;
+        transition: var(--transition);
+        padding: 6px 14px;
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 6px;
+    }
+    .nav-back:hover { color: #0094FF; border-color: #0094FF; }
+    .nav-back i { font-size: 0.85rem; }
+
+    /* ── Hero ── */
+    .page-hero {
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
+        padding: 120px 0 60px;
+        position: relative;
+        overflow: hidden;
+    }
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(0, 148, 255, 0.1);
+        border: 1px solid rgba(0, 148, 255, 0.3);
+        border-radius: 30px;
+        padding: 6px 18px;
+        font-size: 0.85rem;
+        color: var(--light-blue);
+        margin-bottom: 22px;
+        font-family: 'Rajdhani', sans-serif;
+        font-weight: 500;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+    .page-hero h1 {
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        margin-bottom: 20px;
+        background: var(--blue-gradient);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        line-height: 1.15;
+    }
+    .page-hero p {
+        font-size: clamp(1rem, 2vw, 1.2rem);
+        color: var(--text-muted);
+        max-width: 620px;
+        margin-bottom: 36px;
+        line-height: 1.7;
+    }
+    .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+    .hero-stats {
+        display: flex;
+        gap: 40px;
+        margin-top: 50px;
+        flex-wrap: wrap;
+    }
+    .hero-stat { text-align: center; }
+    .hero-stat-num {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 2rem;
+        font-weight: 700;
+        background: var(--blue-gradient);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        display: block;
+    }
+    .hero-stat-label { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+
+    /* ── Section divider ── */
+    .section-divider {
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--dark-orange), transparent);
+        margin: 0 auto;
+        width: 90%;
+        max-width: 1000px;
+    }
+
+    /* ── Sections ── */
+    section { padding: 70px 0; }
+    .section-title { text-align: center; margin-bottom: 50px; }
+    .section-title h2 {
+        font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+        margin-bottom: 14px;
+        background: var(--blue-gradient);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+    .section-title p { font-size: 1.05rem; color: var(--text-muted); max-width: 580px; margin: 0 auto; }
+
+    /* ── Service Cards ── */
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 22px;
+        align-items: start;
+    }
+    .service-card {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 12px;
+        padding: 28px 24px;
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+        will-change: transform;
+    }
+    .service-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: -100%;
+        width: 100%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(0,148,255,0.08), transparent);
+        transition: all 0.7s;
+    }
+    .service-card:hover { transform: translateY(-8px); box-shadow: var(--card-shadow); border-color: var(--card-border-hover); }
+    .service-card:hover::before { left: 100%; }
+
+    .service-icon {
+        width: 56px; height: 56px;
+        background: rgba(0, 148, 255, 0.1);
+        border: 1px solid rgba(0, 148, 255, 0.25);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 18px;
+        background-clip: text;
+        color: var(--light-blue);
+    }
+    .service-card h3 { font-size: 1.2rem; margin-bottom: 10px; color: #fff; }
+    .service-card p { color: #aaa; font-size: 0.95rem; line-height: 1.6; }
+
+    /* ── Tech Stack ── */
+    .tech-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        align-items: start;
+    }
+    .tech-card {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 10px;
+        padding: 22px 18px;
+        text-align: center;
+        transition: var(--transition);
+        will-change: transform;
+    }
+    .tech-card:hover { transform: translateY(-6px); border-color: var(--card-border-hover); box-shadow: var(--card-shadow); }
+    .tech-card i { font-size: 2.2rem; margin-bottom: 10px; display: block; }
+    .tech-card h4 { font-size: 0.95rem; color: #fff; margin-bottom: 4px; }
+    .tech-card p { font-size: 0.8rem; color: #888; }
+    .icon-html  { color: #E44D26; }
+    .icon-css   { color: #264DE4; }
+    .icon-js    { color: #F7DF1E; }
+    .icon-react { color: #61DBFB; }
+    .icon-node  { color: #68A063; }
+    .icon-php   { color: #8892BF; }
+    .icon-mysql { color: #00758F; }
+    .icon-git   { color: #F05032; }
+
+    /* ── Process Steps ── */
+    .process-steps {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0;
+        position: relative;
+    }
+    .process-steps::before {
+        content: '';
+        position: absolute;
+        top: 32px;
+        left: 12%;
+        right: 12%;
+        height: 2px;
+        background: linear-gradient(90deg, #0094FF, #FF4D00);
+        z-index: 0;
+    }
+    .step {
+        text-align: center;
+        padding: 0 16px;
+        position: relative;
+        z-index: 1;
+    }
+    .step-num {
+        width: 64px; height: 64px;
+        border-radius: 50%;
+        background: var(--blue-gradient);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Orbitron', sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin: 0 auto 18px;
+        box-shadow: 0 0 20px rgba(0,148,255,0.4);
+    }
+    .step h4 { font-size: 1rem; margin-bottom: 8px; color: #fff; }
+    .step p { font-size: 0.88rem; color: #999; line-height: 1.5; }
+
+    /* ── Packages ── */
+    .packages-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        align-items: start;
+    }
+    .package-card {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 14px;
+        padding: 32px 26px;
+        text-align: center;
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+        will-change: transform;
+    }
+    .package-card.featured {
+        border-color: var(--light-blue);
+        box-shadow: 0 0 30px rgba(0,148,255,0.15);
+    }
+    .package-card:hover { transform: translateY(-8px); box-shadow: var(--card-shadow); }
+    .package-label {
+        position: absolute;
+        top: 16px; right: 16px;
+        background: var(--blue-gradient);
+        color: #fff;
+        font-size: 0.7rem;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 20px;
+        letter-spacing: 0.5px;
+    }
+    .package-icon {
+        font-size: 2.4rem;
+        margin-bottom: 14px;
+        background: var(--blue-gradient);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+    .package-card h3 { font-size: 1.3rem; margin-bottom: 6px; color: #fff; }
+    .package-card .pkg-subtitle { color: #888; font-size: 0.9rem; margin-bottom: 20px; }
+    .package-features {
+        list-style: none;
+        text-align: left;
+        margin-bottom: 26px;
+    }
+    .package-features li {
+        padding: 7px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        font-size: 0.92rem;
+        color: #ccc;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .package-features li:last-child { border-bottom: none; }
+    .package-features li i { color: #0094FF; font-size: 0.8rem; flex-shrink: 0; }
+
+    /* ── FAQ ── */
+    .faq-list { max-width: 800px; margin: 0 auto; }
+    .faq-item {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 10px;
+        margin-bottom: 12px;
+        overflow: hidden;
+        transition: border-color 0.3s;
+    }
+    .faq-item.open { border-color: rgba(0,148,255,0.45); }
+    .faq-question {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 18px 22px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 500;
+        color: #fff;
+        gap: 16px;
+        user-select: none;
+    }
+    .faq-question i {
+        color: var(--light-blue);
+        font-size: 0.9rem;
+        transition: transform 0.3s ease;
+        flex-shrink: 0;
+    }
+    .faq-item.open .faq-question i { transform: rotate(180deg); }
+    .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s cubic-bezier(0.23,1,0.32,1), padding 0.3s ease;
+        color: #aaa;
+        font-size: 0.95rem;
+        line-height: 1.7;
+        padding: 0 22px;
+    }
+    .faq-item.open .faq-answer { max-height: 300px; padding: 0 22px 18px; }
+
+    /* ── CTA ── */
+    .cta-section {
+        padding: 70px 0;
+        text-align: center;
+    }
+    .cta-box {
+        background: linear-gradient(135deg, rgba(0,84,224,0.12), rgba(0,148,255,0.06));
+        border: 1px solid rgba(0,148,255,0.25);
+        border-radius: 18px;
+        padding: 60px 40px;
+        position: relative;
+        overflow: hidden;
+    }
+    .cta-box::before {
+        content: '';
+        position: absolute;
+        top: -60px; right: -60px;
+        width: 220px; height: 220px;
+        background: radial-gradient(circle, rgba(0,148,255,0.12), transparent 70%);
+        pointer-events: none;
+    }
+    .cta-box h2 {
+        font-size: clamp(1.6rem, 3vw, 2.2rem);
+        margin-bottom: 14px;
+        color: #fff;
+    }
+    .cta-box p { color: var(--text-muted); font-size: 1.05rem; margin-bottom: 30px; max-width: 540px; margin-left: auto; margin-right: auto; }
+    .cta-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+    /* ── Buttons ── */
+    .btn {
+        display: inline-block;
+        padding: 12px 28px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-family: 'Orbitron', sans-serif;
+        font-weight: 500;
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: var(--transition);
+        border: none;
+        cursor: pointer;
+    }
+    .btn-primary {
+        background: var(--blue-gradient);
+        color: #fff;
+        box-shadow: 0 4px 15px rgba(0,84,224,0.3);
+    }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,84,224,0.45); }
+    .btn-secondary {
+        background: transparent;
+        color: #fff;
+        border: 2px solid rgba(255,255,255,0.6);
+    }
+    .btn-secondary:hover { background: #fff; color: #000; }
+
+    /* ── Scroll reveal ── */
+    .reveal {
+        opacity: 0;
+        transform: translateY(28px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── Footer ── */
+    .page-footer {
+        background: rgba(4,4,9,0.97);
+        padding: 28px 0;
+        border-top: 1px solid rgba(255,255,255,0.07);
+        text-align: center;
+    }
+    .page-footer p { color: #555; font-size: 0.85rem; }
+    .page-footer a { color: #555; text-decoration: none; transition: color 0.2s; }
+    .page-footer a:hover { color: #0094FF; }
+
+    /* ── Floating WhatsApp ── */
+    .whatsapp-float {
+        position: fixed;
+        bottom: 28px; right: 24px;
+        width: 56px; height: 56px;
+        background: #25D366;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 1.4rem;
+        text-decoration: none;
+        box-shadow: 0 5px 18px rgba(37,211,102,0.45);
+        z-index: 500;
+        transition: var(--transition);
+        animation: waPulse 2.5s infinite;
+    }
+    .whatsapp-float:hover { transform: scale(1.1); }
+    @keyframes waPulse {
+        0%,100% { box-shadow: 0 5px 18px rgba(37,211,102,0.45); }
+        50%      { box-shadow: 0 5px 28px rgba(37,211,102,0.75); }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 1024px) {
+        .services-grid { grid-template-columns: repeat(2, 1fr); }
+        .tech-grid     { grid-template-columns: repeat(4, 1fr); }
+        .process-steps { grid-template-columns: repeat(2, 1fr); gap: 30px; }
+        .process-steps::before { display: none; }
+        .packages-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 767px) {
+        .services-grid { grid-template-columns: 1fr; }
+        .tech-grid     { grid-template-columns: repeat(2, 1fr); }
+        .process-steps { grid-template-columns: 1fr; }
+        .packages-grid { grid-template-columns: 1fr; }
+        .hero-stats    { gap: 24px; }
+        .page-hero     { padding: 100px 0 50px; }
+        section        { padding: 50px 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.1ms !important; }
+        .reveal { opacity: 1 !important; transform: none !important; }
+    }
+</style>
+</head>
+<body>
+
+<canvas id="matrix" class="matrix-bg" aria-hidden="true"></canvas>
+<div class="matrix-overlay" aria-hidden="true"></div>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+    <div class="container nav-container">
+        <div class="logo">
+            <a href="index.html">
+                <img src="https://i.postimg.cc/3J1QqwvZ/xz.png" alt="Code Nexus" height="35">
+            </a>
+        </div>
+        <a href="index.html" class="nav-back">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+    </div>
+</nav>
+
+<main>
+
+<!-- HERO -->
+<section class="page-hero">
+    <div class="container">
+        <div class="hero-badge">
+            <i class="fas fa-code"></i>
+            Web Development
+        </div>
+        <h1>We Build Websites<br>That Actually Work</h1>
+        <p>From sleek landing pages to complex full-stack platforms — we craft fast, secure, and scalable web solutions tailored to your business goals.</p>
+        <div class="hero-btns">
+            <a href="index.html#contact" class="btn btn-primary">Start Your Project</a>
+            <a href="#packages" class="btn btn-secondary">View Packages</a>
+        </div>
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <span class="hero-stat-num">50+</span>
+                <span class="hero-stat-label">Web Projects</span>
+            </div>
+            <div class="hero-stat">
+                <span class="hero-stat-num">100%</span>
+                <span class="hero-stat-label">Responsive</span>
+            </div>
+            <div class="hero-stat">
+                <span class="hero-stat-num">24/7</span>
+                <span class="hero-stat-label">Support</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SERVICES -->
+<section id="services">
+    <div class="container">
+        <div class="section-title reveal">
+            <h2>What We Offer</h2>
+            <p>End-to-end web development services from design to deployment</p>
+        </div>
+        <div class="services-grid">
+            <div class="service-card reveal">
+                <div class="service-icon"><i class="fas fa-desktop"></i></div>
+                <h3>Front-End Development</h3>
+                <p>Pixel-perfect, responsive interfaces built with modern HTML, CSS, and JavaScript frameworks. Fast, accessible, and visually stunning.</p>
+            </div>
+            <div class="service-card reveal">
+                <div class="service-icon"><i class="fas fa-server"></i></div>
+                <h3>Back-End Development</h3>
+                <p>Robust server-side logic, REST APIs, database architecture, and authentication systems that power your application reliably.</p>
+            </div>
+            <div class="service-card reveal">
+                <div class="service-icon"><i class="fas fa-layer-group"></i></div>
+                <h3>Full-Stack Solutions</h3>
+                <p>Complete end-to-end development combining front-end and back-end into a seamless, high-performance web application.</p>
+            </div>
+            <div class="service-card reveal">
+                <div class="service-icon"><i class="fas fa-shopping-cart"></i></div>
+                <h3>E-Commerce Development</h3>
+                <p>Feature-rich online stores with payment integration, inventory management, and an optimized checkout experience.</p>
+            </div>
+            <div class="service-card reveal">
+                <div class="service-icon"><i class="fas fa-paint-brush"></i></div>
+                <h3>UI/UX Design</h3>
+                <p>User-centered design that balances aesthetics with usability — wireframes, prototypes, and polished final interfaces.</p>
+            </div>
+            <div class="service-card reveal">
+                <div class="service-icon"><i class="fas fa-tools"></i></div>
+                <h3>Maintenance & Support</h3>
+                <p>Ongoing updates, performance monitoring, security patches, and technical support to keep your site running smoothly.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- TECH STACK -->
+<section id="tech">
+    <div class="container">
+        <div class="section-title reveal">
+            <h2>Technologies We Use</h2>
+            <p>Industry-standard tools and frameworks for modern web development</p>
+        </div>
+        <div class="tech-grid">
+            <div class="tech-card reveal">
+                <i class="fab fa-html5 icon-html"></i>
+                <h4>HTML5</h4>
+                <p>Semantic markup</p>
+            </div>
+            <div class="tech-card reveal">
+                <i class="fab fa-css3-alt icon-css"></i>
+                <h4>CSS3</h4>
+                <p>Modern styling</p>
+            </div>
+            <div class="tech-card reveal">
+                <i class="fab fa-js-square icon-js"></i>
+                <h4>JavaScript</h4>
+                <p>ES6+ / TypeScript</p>
+            </div>
+            <div class="tech-card reveal">
+                <i class="fab fa-react icon-react"></i>
+                <h4>React</h4>
+                <p>UI components</p>
+            </div>
+            <div class="tech-card reveal">
+                <i class="fab fa-node-js icon-node"></i>
+                <h4>Node.js</h4>
+                <p>Server-side JS</p>
+            </div>
+            <div class="tech-card reveal">
+                <i class="fab fa-php icon-php"></i>
+                <h4>PHP</h4>
+                <p>Backend scripting</p>
+            </div>
+            <div class="tech-card reveal">
+                <i class="fas fa-database icon-mysql"></i>
+                <h4>MySQL / MongoDB</h4>
+                <p>Database solutions</p>
+            </div>
+            <div class="tech-card reveal">
+                <i class="fab fa-git-alt icon-git"></i>
+                <h4>Git</h4>
+                <p>Version control</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- PROCESS -->
+<section id="process">
+    <div class="container">
+        <div class="section-title reveal">
+            <h2>Our Process</h2>
+            <p>A clear, structured workflow from idea to launch</p>
+        </div>
+        <div class="process-steps">
+            <div class="step reveal">
+                <div class="step-num">01</div>
+                <h4>Discovery</h4>
+                <p>We learn your goals, audience, and requirements through a detailed consultation session.</p>
+            </div>
+            <div class="step reveal">
+                <div class="step-num">02</div>
+                <h4>Design</h4>
+                <p>Wireframes and UI mockups are crafted and refined until you're fully satisfied.</p>
+            </div>
+            <div class="step reveal">
+                <div class="step-num">03</div>
+                <h4>Development</h4>
+                <p>Clean, optimized code is written following best practices and performance standards.</p>
+            </div>
+            <div class="step reveal">
+                <div class="step-num">04</div>
+                <h4>Launch</h4>
+                <p>Testing, deployment, and handover — with full support after going live.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- PACKAGES -->
+<section id="packages">
+    <div class="container">
+        <div class="section-title reveal">
+            <h2>Packages</h2>
+            <p>Flexible pricing tailored to your project size and budget</p>
+        </div>
+        <div class="packages-grid">
+
+            <div class="package-card reveal">
+                <div class="package-icon"><i class="fas fa-rocket"></i></div>
+                <h3>Starter</h3>
+                <p class="pkg-subtitle">Perfect for small businesses & personal brands</p>
+                <ul class="package-features">
+                    <li><i class="fas fa-check-circle"></i> Up to 5 Pages</li>
+                    <li><i class="fas fa-check-circle"></i> Fully Responsive Design</li>
+                    <li><i class="fas fa-check-circle"></i> Contact Form</li>
+                    <li><i class="fas fa-check-circle"></i> Basic SEO Setup</li>
+                    <li><i class="fas fa-check-circle"></i> 1 Month Support</li>
+                </ul>
+                <a href="index.html#contact" class="btn btn-secondary" style="width:100%;text-align:center;">Get Started</a>
+            </div>
+
+            <div class="package-card featured reveal">
+                <div class="package-label">Most Popular</div>
+                <div class="package-icon"><i class="fas fa-gem"></i></div>
+                <h3>Professional</h3>
+                <p class="pkg-subtitle">Ideal for growing businesses & e-commerce</p>
+                <ul class="package-features">
+                    <li><i class="fas fa-check-circle"></i> Up to 15 Pages</li>
+                    <li><i class="fas fa-check-circle"></i> Custom UI/UX Design</li>
+                    <li><i class="fas fa-check-circle"></i> E-Commerce Integration</li>
+                    <li><i class="fas fa-check-circle"></i> Payment Gateway</li>
+                    <li><i class="fas fa-check-circle"></i> Admin Dashboard</li>
+                    <li><i class="fas fa-check-circle"></i> Advanced SEO</li>
+                    <li><i class="fas fa-check-circle"></i> 3 Months Support</li>
+                </ul>
+                <a href="index.html#contact" class="btn btn-primary" style="width:100%;text-align:center;">Get Started</a>
+            </div>
+
+            <div class="package-card reveal">
+                <div class="package-icon"><i class="fas fa-crown"></i></div>
+                <h3>Enterprise</h3>
+                <p class="pkg-subtitle">For large-scale platforms & complex systems</p>
+                <ul class="package-features">
+                    <li><i class="fas fa-check-circle"></i> Unlimited Pages</li>
+                    <li><i class="fas fa-check-circle"></i> Full-Stack Development</li>
+                    <li><i class="fas fa-check-circle"></i> Custom API & Database</li>
+                    <li><i class="fas fa-check-circle"></i> Cloud Deployment</li>
+                    <li><i class="fas fa-check-circle"></i> Performance Optimization</li>
+                    <li><i class="fas fa-check-circle"></i> Security Hardening</li>
+                    <li><i class="fas fa-check-circle"></i> 6 Months Support</li>
+                </ul>
+                <a href="index.html#contact" class="btn btn-secondary" style="width:100%;text-align:center;">Get Started</a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- FAQ -->
+<section id="faq">
+    <div class="container">
+        <div class="section-title reveal">
+            <h2>Frequently Asked Questions</h2>
+            <p>Answers to the most common questions about our web development service</p>
+        </div>
+        <div class="faq-list" id="faqList">
+            <div class="faq-item">
+                <div class="faq-question">
+                    How long does it take to build a website?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Timelines vary by project scope. A simple landing page takes 3–7 days, a business website 2–4 weeks, and a full e-commerce or custom platform 4–10 weeks. We always provide a clear timeline before starting.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    Will my website be mobile-friendly?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Absolutely. Every website we build is fully responsive and tested across all screen sizes — mobile, tablet, and desktop — using a mobile-first development approach.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    Do you provide hosting and domain services?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    We can guide you through selecting and setting up hosting and domain registration. We work with most major providers and can assist with DNS configuration and deployment.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    Can I update the website content myself?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Yes. We can integrate a CMS (Content Management System) so you can easily update text, images, and content without touching any code. We'll also provide a walkthrough on how to use it.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    What information do you need to start?
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    We start with a discovery call to understand your goals, target audience, preferred design style, and functionality requirements. From there we create a proposal and timeline before any work begins.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-box reveal">
+            <h2>Ready to Build Something Great?</h2>
+            <p>Tell us about your project and we'll get back to you within 24 hours with a plan and a quote.</p>
+            <div class="cta-btns">
+                <a href="index.html#contact" class="btn btn-primary">Contact Us Now</a>
+                <a href="https://wa.me/201097422920" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
+                    <i class="fab fa-whatsapp" style="margin-right:6px"></i> WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="page-footer">
+    <div class="container">
+        <p>&copy; <span id="currentYear"></span> Code Nexus. All rights reserved. |
+            <a href="index.html">Home</a> &nbsp;|&nbsp;
+            <a href="index.html#contact">Contact</a>
+        </p>
+    </div>
+</footer>
+
+<!-- Floating WhatsApp -->
+<a href="https://wa.me/201097422920" target="_blank" rel="noopener noreferrer"
+   class="whatsapp-float" aria-label="Contact us on WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+</a>
+
+<script>
+(function() {
+    'use strict';
+
+    /* Matrix */
+    var canvas = document.getElementById('matrix');
+    var ctx = canvas.getContext('2d');
+    var chars = '01{}[]();<>/*-+@#$%ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    var fontSize = 14, columns, rainDrops;
+
+    function resize() {
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+        columns   = Math.floor(canvas.width / fontSize);
+        rainDrops = [];
+        for (var i = 0; i < columns; i++) rainDrops[i] = 1;
+    }
+    function draw() {
+        ctx.fillStyle = 'rgba(0,0,0,0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#0094FF';
+        ctx.font = fontSize + 'px monospace';
+        for (var i = 0; i < rainDrops.length; i++) {
+            ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * fontSize, rainDrops[i] * fontSize);
+            if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) rainDrops[i] = 0;
+            rainDrops[i]++;
+        }
+        requestAnimationFrame(draw);
+    }
+    resize();
+    draw();
+    var rt;
+    window.addEventListener('resize', function() { clearTimeout(rt); rt = setTimeout(resize, 200); }, { passive: true });
+
+    /* Navbar scroll */
+    var navbar = document.getElementById('navbar');
+    var scrolling = false;
+    window.addEventListener('scroll', function() {
+        if (!scrolling) {
+            scrolling = true;
+            requestAnimationFrame(function() {
+                navbar.classList.toggle('scrolled', window.scrollY > 50);
+                scrolling = false;
+            });
+        }
+    }, { passive: true });
+
+    /* Scroll reveal */
+    if ('IntersectionObserver' in window) {
+        var obs = new IntersectionObserver(function(entries) {
+            entries.forEach(function(e) {
+                if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+            });
+        }, { threshold: 0.12 });
+        document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
+    } else {
+        document.querySelectorAll('.reveal').forEach(function(el) { el.classList.add('visible'); });
+    }
+
+    /* FAQ accordion */
+    document.querySelectorAll('.faq-question').forEach(function(q) {
+        q.addEventListener('click', function() {
+            var item = q.parentElement;
+            var isOpen = item.classList.contains('open');
+            document.querySelectorAll('.faq-item').forEach(function(i) { i.classList.remove('open'); });
+            if (!isOpen) item.classList.add('open');
+        });
+    });
+
+    /* Copyright year */
+    var y = document.getElementById('currentYear');
+    if (y) y.textContent = new Date().getFullYear();
+
+})();
+</script>
+</body>
+</html>
