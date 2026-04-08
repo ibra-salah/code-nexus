@@ -11,6 +11,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- Swiper CSS for Slider -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
 <style>
     :root {
         --blue-gradient: linear-gradient(135deg, #0094FF, #0056E0);
@@ -98,11 +101,13 @@
     .nav-back:hover { color: #0094FF; border-color: #0094FF; }
     .nav-back i { font-size: 0.85rem; }
 
-    /* ── Hero ── */
+    /* ── Hero ── (CENTERED - MODIFIED) */
     .page-hero {
         min-height: 70vh;
         display: flex;
         align-items: center;
+        justify-content: center;
+        text-align: center;
         padding: 120px 0 60px;
         position: relative;
         overflow: hidden;
@@ -110,6 +115,7 @@
     .hero-badge {
         display: inline-flex;
         align-items: center;
+        justify-content: center;
         gap: 8px;
         background: rgba(0, 148, 255, 0.1);
         border: 1px solid rgba(0, 148, 255, 0.3);
@@ -136,12 +142,13 @@
         font-size: clamp(1rem, 2vw, 1.2rem);
         color: var(--text-muted);
         max-width: 620px;
-        margin-bottom: 36px;
+        margin: 0 auto 36px;
         line-height: 1.7;
     }
-    .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+    .hero-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
     .hero-stats {
         display: flex;
+        justify-content: center;
         gap: 40px;
         margin-top: 50px;
         flex-wrap: wrap;
@@ -180,6 +187,71 @@
         color: transparent;
     }
     .section-title p { font-size: 1.05rem; color: var(--text-muted); max-width: 580px; margin: 0 auto; }
+
+    /* ── SLIDER STYLES (NEW) ── */
+    .slider-section {
+        padding: 40px 0 20px;
+    }
+    .slider-container {
+        max-width: 1100px;
+        margin: 0 auto;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        border: 1px solid rgba(0, 148, 255, 0.2);
+    }
+    .swiper-slide {
+        position: relative;
+        text-align: center;
+    }
+    .swiper-slide img {
+        width: 100%;
+        height: auto;
+        display: block;
+        object-fit: cover;
+        max-height: 450px;
+    }
+    .slide-caption {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+        padding: 20px;
+        text-align: center;
+    }
+    .slide-caption h3 {
+        font-size: 1.3rem;
+        margin-bottom: 5px;
+        color: #fff;
+    }
+    .slide-caption p {
+        font-size: 0.9rem;
+        color: #ccc;
+    }
+    .swiper-button-next, .swiper-button-prev {
+        color: #0094FF !important;
+        background: rgba(0,0,0,0.5);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        transition: all 0.3s;
+    }
+    .swiper-button-next:hover, .swiper-button-prev:hover {
+        background: #0094FF;
+        color: #fff !important;
+    }
+    .swiper-button-next:after, .swiper-button-prev:after {
+        font-size: 1.2rem;
+    }
+    .swiper-pagination-bullet {
+        background: #fff !important;
+        opacity: 0.5;
+    }
+    .swiper-pagination-bullet-active {
+        background: #0094FF !important;
+        opacity: 1;
+    }
 
     /* ── Service Cards ── */
     .services-grid {
@@ -511,6 +583,9 @@
         .hero-stats    { gap: 24px; }
         .page-hero     { padding: 100px 0 50px; }
         section        { padding: 50px 0; }
+        .swiper-button-next, .swiper-button-prev { display: none; }
+        .slide-caption h3 { font-size: 1rem; }
+        .slide-caption p { font-size: 0.7rem; }
     }
     @media (prefers-reduced-motion: reduce) {
         *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.1ms !important; }
@@ -539,7 +614,7 @@
 
 <main>
 
-<!-- HERO -->
+<!-- HERO SECTION (CENTERED - MODIFIED) -->
 <section class="page-hero">
     <div class="container">
         <div class="hero-badge">
@@ -571,7 +646,54 @@
 
 <div class="section-divider"></div>
 
-<!-- SERVICES -->
+<!-- NEW SLIDER SECTION (ABOVE "What We Offer") -->
+<section class="slider-section">
+    <div class="container">
+        <div class="swiper-container slider-container">
+            <div class="swiper-wrapper">
+                <!-- Slide 1 -->
+                <div class="swiper-slide">
+                    <img src="https://i.postimg.cc/LXgKZc1Z/3.png" alt="Web Development Project 1">
+                    <div class="slide-caption">
+                        <h3>BigBook Library</h3>
+                        <p>Digital library platform for students and researchers</p>
+                    </div>
+                </div>
+                <!-- Slide 2 -->
+                <div class="swiper-slide">
+                    <img src="https://i.postimg.cc/sXxfHHZP/7.png" alt="Web Development Project 2">
+                    <div class="slide-caption">
+                        <h3>Raad Construction</h3>
+                        <p>Professional construction & contracting services</p>
+                    </div>
+                </div>
+                <!-- Slide 3 -->
+                <div class="swiper-slide">
+                    <img src="https://i.postimg.cc/y6w99cwn/2.png" alt="Web Development Project 3">
+                    <div class="slide-caption">
+                        <h3>Spider Media</h3>
+                        <p>Creative agency & digital marketing solutions</p>
+                    </div>
+                </div>
+                <!-- Slide 4 -->
+                <div class="swiper-slide">
+                    <img src="https://i.postimg.cc/d0HZ0y24/4.png" alt="Web Development Project 4">
+                    <div class="slide-caption">
+                        <h3>Commando Partners</h3>
+                        <p>Business partner connection platform</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Navigation arrows -->
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+            <!-- Pagination dots -->
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
+</section>
+
+<!-- SERVICES (What We Offer) -->
 <section id="services">
     <div class="container">
         <div class="section-title reveal">
@@ -856,6 +978,9 @@
     <i class="fab fa-whatsapp"></i>
 </a>
 
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
 <script>
 (function() {
     'use strict';
@@ -928,6 +1053,25 @@
     /* Copyright year */
     var y = document.getElementById('currentYear');
     if (y) y.textContent = new Date().getFullYear();
+
+    /* Initialize Swiper Slider */
+    new Swiper('.swiper-container', {
+        loop: true,
+        autoplay: {
+            delay: 4000,
+            disableOnInteraction: false,
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        effect: 'slide',
+        speed: 800,
+    });
 
 })();
 </script>
