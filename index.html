@@ -1414,6 +1414,33 @@
             }
             .slide-left, .slide-up, .slide-right { opacity: 1 !important; transform: none !important; }
         }
+
+        /* Fix footer social icons to be horizontal */
+.footer-social {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.footer-social .social-link {
+    width: 40px;
+    height: 40px;
+    background: rgba(30, 30, 40, 0.8);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+    text-decoration: none;
+    color: white;
+}
+
+.footer-social .social-link:hover {
+    background: var(--blue-gradient);
+    transform: translateY(-3px);
+}
     </style>
 </head>
 <body>
